@@ -21,10 +21,11 @@ class SQLHelper():
     #################################################
 
     # USING RAW SQL
-    def get_bar(self, user_selection="Most Loved"):
+    def get_bar(self, user_selection):
 
         #title popularity.
         #user selection, where clause
+        user_selection = "Cult Favorites" #default selection
         if user_selection == "Most Loved":
             filter_clause = "COUNT(title) >= 20"
         elif user_selection == "Highly Acclaimed":
