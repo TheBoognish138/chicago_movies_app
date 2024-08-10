@@ -1,17 +1,22 @@
+
+
 function do_work() {
   // extract user input
-  let min_launches = d3.select("#launch_filter").property("value");
-  min_launches = parseInt(min_launches);
-  let region = d3.select("#region_filter").property("value");
-
+  console.log("do_work()");
+  
+  let popularity = d3.select("#popularity_filter").property("value");
+  console.log(popularity);
   // We need to make a request to the API
-  let url = `/api/v1.0/get_dashboard/${min_launches}/${region}`;
+  let url = `/api/v1.0/get_dashboard/${popularity}`;
+  console.log(url);
   d3.json(url).then(function (data) {
+    console.log("do_work(d3.json)");
+    console.log(data);
 
     // create the graphs
     make_bar(data.bar_data);
-    make_pie(data.pie_data);
-    make_table(data.table_data)
+    //make_pie(data.pie_data);
+    //make_table(data.table_data)
   });
 }
 
@@ -40,6 +45,7 @@ function make_table(filtered_data) {
 }
 
 function make_pie(filtered_data) {
+  console.log(filtered_data);
   // sort values
   filtered_data.sort((a, b) => (b.launch_attempts - a.launch_attempts));
 
@@ -69,45 +75,36 @@ function make_pie(filtered_data) {
 
 function make_bar(filtered_data) {
   // sort values
-  filtered_data.sort((a, b) => (b.launch_attempts - a.launch_attempts));
-
+  //filtered_data.sort((a, b) => (b.Plays - a.Plays));
+  console.log(filtered_data[0]);
   // extract the x & y values for our bar chart
-  let bar_x = filtered_data.map(x => x.name);
-  let bar_text = filtered_data.map(x => x.full_name);
-  let bar_y1 = filtered_data.map(x => x.launch_attempts);
-  let bar_y2 = filtered_data.map(x => x.launch_successes);
-
-  // Trace1 for the Launch Attempts
+  let bar_x = filtered_data.map(x => x.Movie);
+  console.log("make_bar()")
+  console.log(bar_x);
+  //let bar_text = filtered_data.map(x => x.Movies);
+  let bar_y1 = filtered_data.map(x => x.Plays);
+  
+  
+  // Trace 1 for the movies popularity
   let trace1 = {
     x: bar_x,
     y: bar_y1,
     type: 'bar',
     marker: {
-      color: "skyblue"
+      color: "turbo"
     },
-    text: bar_text,
-    name: "Attempts"
-  };
-
-  // Trace 2 for the Launch Successes
-  let trace2 = {
-    x: bar_x,
-    y: bar_y2,
-    type: 'bar',
-    marker: {
-      color: "firebrick"
-    },
-    text: bar_text,
-    name: "Successes"
+    text: bar_x,
+    name: "Movies Popularity"
   };
 
   // Create data array
-  let data = [trace1, trace2];
+  let data = [trace1];
 
   // Apply a title to the layout
   let layout = {
-    title: "SpaceX Launch Results",
-    barmode: "group",
+    title: "Movies Popularity",
+    xaxis: {title: "Movie Title"},
+    yaxis: {title: "Times Played"},
     // Include margins in the layout so the x-tick labels display correctly
     margin: {
       l: 50,
@@ -117,7 +114,7 @@ function make_bar(filtered_data) {
       pad: 4
     }
   };
-
+  console.log(data);
   // Render the plot to the div tag with id "plot"
   Plotly.newPlot("bar_chart", data, layout);
 

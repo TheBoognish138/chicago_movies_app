@@ -1,6 +1,14 @@
 from flask import Flask, jsonify, render_template
 import pandas as pd
 import numpy as np
+import os
+
+
+#################################################
+# Change to expected directory so that SQLIte
+# file can be opened
+#################################################
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
 from sqlHelper import SQLHelper
 
 #################################################
