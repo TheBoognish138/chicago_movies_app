@@ -15,40 +15,21 @@ function do_work() {
   });
 }
 
-// function make_table(filtered_data) {
-//   // select table
-//   let table = d3.select("#data_table");
-//   let table_body = table.select("tbody");
-//   table_body.html(""); // destroy any existing rows
+function make_sunburst(filtered_data) {
 
-//   // create table
-//   for (let i = 0; i < filtered_data.length; i++){
-//     // get data row
-//     let data_row = filtered_data[i];
+  let lab = filtered_data.map(x => x.label)
+  let par = filtered_data.map(x => x.parent)
+  let val = filtered_data.map(x => x.num_plays)
 
-//     // creates new row in the table
-//     let row = table_body.append("tr");
-//     row.append("td").text(data_row.name);
-//     row.append("td").text(data_row.full_name);
-//     row.append("td").text(data_row.region);
-//     row.append("td").text(data_row.latitude);
-//     row.append("td").text(data_row.longitude);
-//     row.append("td").text(data_row.launch_attempts);
-//     row.append("td").text(data_row.launch_successes);
-//     row.append("td").text(data_row.launch_attempts - data_row.launch_successes);
-//   }
-// }
-
-function make_sunburst(data) {
-  console.log(data);
   let trace = {
     "type": "sunburst",
-    "labels": data.sunburst_data.map(x => x.label),
-    "parents": data.sunburst_data.map(x => x.parent),
-    "values":  data.sunburst_data.map(x => x.num_plays),
+    "labels": lab,
+    "parents": par,
+    "values": val,
     "leaf": {"opacity": 0.4},
     "marker": {"line": {"width": 2}},
-    "branchvalues": 'total'
+    "branchvalues": 'total',
+    "hovertext": 'showings'
   }
 
   let traces = [trace];
@@ -81,7 +62,8 @@ function make_bar(filtered_data) {
       color: "turbo"
     },
     // text: bar_x,
-    name: "Movies Popularity"
+    name: "Movies Frequency",
+    hovertext: "showings"
   };
 
   // Create data array
@@ -89,7 +71,7 @@ function make_bar(filtered_data) {
 
   // Apply a title to the layout
   let layout = {
-    title: "Movies Popularity",
+    title: "Movies Frequency",
     xaxis: {title: "Movie Title"},
     yaxis: {title: "Times Played"},
     // Include margins in the layout so the x-tick labels display correctly

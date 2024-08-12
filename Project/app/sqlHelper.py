@@ -21,18 +21,18 @@ class SQLHelper():
     #################################################
 
     # USING RAW SQL
-    def get_bar(self, user_selection="Most Loved"):
+    def get_bar(self, user_selection="Most Frequent"):
 
         #title popularity.
         #user selection, where clause
-        if user_selection == "Most Loved":
+        if user_selection == "Most Frequent":
             filter_clause = "COUNT(title) >= 20"
-        elif user_selection == "Highly Acclaimed":
+        elif user_selection == "Frequent":
             filter_clause = "COUNT(title) >= 15 and COUNT(title) < 20"
-        elif user_selection == "Popular":
+        elif user_selection == "Less Frequent":
             filter_clause = "COUNT(title) >= 10 and COUNT(title) <15"
         else:
-            user_selection == "Cult Favorites"
+            user_selection == "Rare"
             filter_clause = "COUNT(title) >= 2 and COUNT(title) <10"
 
         # build the query
@@ -70,13 +70,13 @@ class SQLHelper():
             UNION ALL
 
             SELECT
-                datamonth as label,
+                day as label,
                 datayear as parent,
                 count(*) num_plays
             FROM
                 showings
             GROUP BY
-                datamonth,
+                day,
                 datayear;
         """
 
