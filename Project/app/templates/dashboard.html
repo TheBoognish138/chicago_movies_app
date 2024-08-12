@@ -44,22 +44,19 @@
      <div class="container-fluid">
         <div class="row">
             <div class="col-md-12 text-center">
-                <h1>SpaceX Dashboard</h1>
+                <h1>Chicago, Movies at the park</h1>
             </div>
         </div>
         <hr/>
         <div class="row">
             <div class="col-md-6">
-                <label for="launch_filter">Min Launches</label>
-                <input type="number" value="10" id="launch_filter">
-
-                <label for="region_filter">Region</label>
-                <select id="region_filter">
-                    <option selected>All</option>
-                    <option>California</option>
-                    <option>Florida</option>
-                    <option>Marshall Islands</option>
-                    <option>Texas</option>
+                <label for="popularity_filter">Movies Popularity</label>
+                <select id="popularity_filter">
+                    <option selected>Most Loved</option>
+                    <option>Highly Acclaimed</option>
+                    <option>Popular</option>
+                    <option>Cult Favorites</option>
+                    <option>One Timers</option>
                 </select>
 
                 <button id="filter">Filter!</button>
@@ -70,11 +67,11 @@
         </div>
         <hr/>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6"">
                 <div id="bar_chart"></div>
             </div>
             <div class="col-md-6">
-                <div id="pie_chart"></div>
+                <div id="sunburst"></div>
             </div>
         </div>
         <hr/>

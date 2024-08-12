@@ -3,17 +3,13 @@
 // Can we fetch the data that we need to plot?
 
 
-function createMap(data) {
+function createMap(data, geo_data) {
   // STEP 1: Init the Base Layers
 
   // Define variables for our tile layers.
   let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   })
-
-  let topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-  });
 
   // Step 2: Create the Overlay layers
   let markers = L.markerClusterGroup();
@@ -43,13 +39,12 @@ function createMap(data) {
     blur: 20
   });
 
+  // chicago neighborhood boundaries
+  let geo_layer = L.geoJSON(geo_data);
+
   // Step 3: BUILD the Layer Controls
 
   // Only one base layer can be shown at a time.
-  let baseLayers = {
-    Street: street,
-    Topography: topo
-  };
 
   let overlayLayers = {
     Markers: markers,
@@ -65,25 +60,48 @@ function createMap(data) {
   d3.select("#map-container").html("<div id='map'></div>");
 
   let myMap = L.map("map", {
-    center: [40.7128, -74.0059],
-    zoom: 5,
-    layers: [street, markers]
+    center: [41.8781, -87.6298],
+    zoom: 10,
+    layers: [street, markers, geo_layer]
   });
 
 
   // Step 5: Add the Layer Control filter + legends as needed
-  L.control.layers(baseLayers, overlayLayers).addTo(myMap);
+  L.control.layers(overlayLayers).addTo(myMap);
 
 }
 
 function do_work() {
+ 
+  // We need to make a request to the API
+  let url = `/api/v1.0/get_map/2014/2019`; //2014 and 2019 will eventually need to be user inputs
+  let url2 = "https://raw.githubusercontent.com/henrywht21/chicago_boundaries/main/chicago-community-areas.geojson";
+
+  // make TWO requests
+  d3.json(url).then(function (data) {
+    d3.json(url2).then(function (geo_data){
+      
+      createMap(data, geo_data);
+      console.log(geo_data)
+    })
+    
+  });
+}
+
+// event listener for CLICK on Button
+d3.select("#filter").on("click", do_work);
+
+do_work();
+
+function do_work() {
   // extract user input
-  let min_launches = d3.select("#launch_filter").property("value");
-  min_launches = parseInt(min_launches);
-  let region = d3.select("#region_filter").property("value");
+  let year_min = d3.select("#year_min").property("value");
+  year_min = parseInt(year_min);
+  let year_max = d3.select("#year_max").property("value");
+  year_max = parseInt(year_max);
 
   // We need to make a request to the API
-  let url = `/api/v1.0/get_map/${min_launches}/${region}`;
+  let url = `/api/v1.0/get_map/${year_min}/${year_max}`;
 
   // make TWO requests
   d3.json(url).then(function (data) {
