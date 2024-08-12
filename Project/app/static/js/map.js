@@ -1,9 +1,14 @@
-// GOAL 1
-// Can I render a basic base map? - Set up Leaflet correctly
-// Can we fetch the data that we need to plot?
+let maxValue = 0; // Initialize maxValue
 
+function getColor(d) {
+  return d > .75*maxValue ? '#009c1a' :
+         d > .5*maxValue  ? '#26cc00' :
+         d > .25*maxValue  ? '#7be382' :
+         d > 0 ? '#d2f2d4' :
+                   '#ffffff' ;
+}
 
-function createMap(data) {
+function createMap(data, geo_data) {
   // STEP 1: Init the Base Layers
 
   // Define variables for our tile layers.
@@ -11,13 +16,8 @@ function createMap(data) {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   })
 
-  let topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-  });
-
   // Step 2: Create the Overlay layers
   let markers = L.markerClusterGroup();
-  let heatArray = [];
 
   for (let i = 0; i < data.length; i++){
     let row = data[i];
@@ -29,32 +29,31 @@ function createMap(data) {
 
     // make marker
     let marker = L.marker(point);
-    let popup = `<h1>${row.full_name}</h1><hr><h2>${row.region}</h2><hr><h3>${row.launch_attempts} | ${row.launch_successes}</h3>`;
+    let popup = `<h1>${row.title}</h1><hr><h2>${row.park}</h2><hr><h3>${row.date}</h3><hr><h3>${row.rating}</h3><hr><h4>Closed Captioning: ${row.cc}</h4>`;
     marker.bindPopup(popup);
     markers.addLayer(marker);
-
-    // add to heatmap
-    heatArray.push(point);
   }
-
-  // create layer
-  let heatLayer = L.heatLayer(heatArray, {
-    radius: 25,
-    blur: 20
-  });
-
   // Step 3: BUILD the Layer Controls
 
   // Only one base layer can be shown at a time.
-  let baseLayers = {
-    Street: street,
-    Topography: topo
-  };
 
   let overlayLayers = {
-    Markers: markers,
-    Heatmap: heatLayer
+    Markers: markers
   }
+  // Choropleth Layer
+  // Create a new choropleth layer.
+  function style(feature) {
+    return {
+        fillColor: getColor(feature.properties.family_friendly_counts),
+        weight: 1.8,
+        opacity: 1,
+        color: 'white',
+        dashArray: '2',
+        fillOpacity: 0.7
+    };
+}
+  // chicago neighborhood boundaries
+  let geo_layer = L.geoJSON(geo_data,{style: style});
 
   // Step 4: INIT the Map
 
@@ -65,29 +64,69 @@ function createMap(data) {
   d3.select("#map-container").html("<div id='map'></div>");
 
   let myMap = L.map("map", {
-    center: [40.7128, -74.0059],
-    zoom: 5,
-    layers: [street, markers]
+    center: [41.8781, -87.6298],
+    zoom: 10,
+    layers: [street, markers, geo_layer]
   });
-
-
+  
   // Step 5: Add the Layer Control filter + legends as needed
-  L.control.layers(baseLayers, overlayLayers).addTo(myMap);
 
 }
 
+let year_min = 2014
+let year_max = 2019
+
 function do_work() {
-  // extract user input
-  let min_launches = d3.select("#launch_filter").property("value");
-  min_launches = parseInt(min_launches);
-  let region = d3.select("#region_filter").property("value");
+  year_min = d3.select("#year_min").property("value");
+  year_max = d3.select("#year_max").property("value")
 
   // We need to make a request to the API
-  let url = `/api/v1.0/get_map/${min_launches}/${region}`;
+  let url = `/api/v1.0/get_map/${year_min}/${year_max}`; //2014 and 2019 will eventually need to be user inputs
+  let url2 = "https://raw.githubusercontent.com/henrywht21/chicago_boundaries/main/chicago-community-areas.geojson";
 
   // make TWO requests
   d3.json(url).then(function (data) {
-    createMap(data);
+    d3.json(url2).then(function (geo_data){
+      
+      // Code created with Xpent assistance
+      // Create an object to store the counts for each community
+      let communityCounts = {};
+
+      // Loop through the data to count the number of rows for each community with rating "G"
+      data.forEach(film => {
+        if ((film.rating === "G" || film.rating === "PG")) {
+          const community = film.community;
+          communityCounts[community] = (communityCounts[community] || 0) + 1;
+        }
+      });
+
+      console.log(communityCounts)
+
+      // Loop through the features in the geo_data and add the "family friendly counts" property
+      geo_data.features.forEach(feature => {
+        const communityName = feature.properties.community;
+        if (communityCounts[communityName]) {
+          feature.properties["family_friendly_counts"] = communityCounts[communityName];
+        } else {
+          feature.properties["family_friendly_counts"] = 0; // Set count to 0 if no films with "G" or "PG" rating in that community
+        }
+      });
+
+      const values = Object.values(communityCounts);
+      
+      values.forEach((value) => {
+        maxValue = Math.max(maxValue, value);
+      });
+      
+      console.log(maxValue);
+
+      console.log(data)
+
+      createMap(data, geo_data);
+  
+
+    })
+    
   });
 }
 

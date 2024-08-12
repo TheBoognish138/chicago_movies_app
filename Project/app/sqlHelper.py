@@ -21,22 +21,19 @@ class SQLHelper():
     #################################################
 
     # USING RAW SQL
-    def get_bar(self, user_selection):
+    def get_bar(self, user_selection="Most Frequent"):
 
         #title popularity.
         #user selection, where clause
-        user_selection = "Cult Favorites" #default selection
-        if user_selection == "Most Loved":
+        if user_selection == "Most Frequent":
             filter_clause = "COUNT(title) >= 20"
-        elif user_selection == "Highly Acclaimed":
+        elif user_selection == "Frequent":
             filter_clause = "COUNT(title) >= 15 and COUNT(title) < 20"
-        elif user_selection == "Popular":
+        elif user_selection == "Less Frequent":
             filter_clause = "COUNT(title) >= 10 and COUNT(title) <15"
-        elif user_selection == "Cult Favorites":
-            filter_clause ="COUNT(title) >= 2 and COUNT(title) <10"
         else:
-            user_selection == "One Timers"
-            filter_clause = "COUNT(title) = 1"
+            user_selection == "Rare"
+            filter_clause = "COUNT(title) >= 2 and COUNT(title) <10"
 
         # build the query
         query = f"""
@@ -55,22 +52,37 @@ class SQLHelper():
         df = pd.read_sql(text(query), con = self.engine)
         data = df.to_dict(orient="records")
         return(data)
+    
 
     def get_sunburst(self):
 
         # build the query
         query = f"""
             SELECT
-                title,
-                datayear,
-                datamonth,
-                day
+                datayear as label,
+                "" as parent,
+                count(*) num_plays
             FROM
-                showings;
+                showings
+            GROUP BY
+                datayear
+
+            UNION ALL
+
+            SELECT
+                day as label,
+                datayear as parent,
+                count(*) num_plays
+            FROM
+                showings
+            GROUP BY
+                day,
+                datayear;
         """
 
-        df = pd.read_sql(text(query), con = self.engine)
+        df = pd.read_sql(text(query), con=self.engine)
         data = df.to_dict(orient="records")
+
         return(data)
 
     def get_map(self, year_min, year_max):

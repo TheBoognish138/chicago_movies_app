@@ -1,4 +1,4 @@
-title,park,date,rating,cc,location.latitude,location.longitude,datayear,day,address,community,geocode_address,datamonth
+title,park,date,rating,cc,latitude,longitude,datayear,day,address,community,geocode_address,datamonth
 Lego Movie,Austin-Foster Playlot Park,2014-08-08T03:00:00Z,PG,No,41.9759407,-87.77890778,2014,Fri,"6020 W Foster Ave Chicago, IL 60630",JEFFERSON PARK,"6020 W Foster Ave Chicago, IL 60630",08
 The Smurfs 2,Brooks Park,2014-07-19T03:00:00Z,PG,No,42.01028061,-87.8066864,2014,Sat,"7100 N Harlem Ave Chicago, IL 60631",EDISON PARK,"7100 N Harlem Ave Chicago, IL 60631",07
 Delivery Man,Dunham Park,2014-06-14T04:00:00Z,PG-13,No,41.96598053,-87.78197479,2014,Sat,4638 N. Melvina Ave. Chicago IL 60630,PORTAGE PARK,4638 N. Melvina Ave. Chicago IL 60630,06
