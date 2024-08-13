@@ -30,11 +30,15 @@ def map():
 def about_us():
     return render_template("about_us.html")
 
+@app.route("/sources")
+def sources():
+    return render_template("sources.html")
+
 # SQL Queries
 @app.route("/api/v1.0/get_dashboard/<user_selection>")
 def get_dashboard(user_selection):
     bar_data = sql.get_bar(user_selection)
-    sunburst_data = sql.get_sunburst()
+    sunburst_data = sql.get_sunburst(user_selection)
 
     data = {
         "bar_data": bar_data,

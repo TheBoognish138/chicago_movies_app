@@ -17,15 +17,12 @@ function do_work() {
 
 function make_sunburst(filtered_data) {
 
-  let lab = filtered_data.map(x => x.label)
-  let par = filtered_data.map(x => x.parent)
-  let val = filtered_data.map(x => x.num_plays)
 
   let trace = {
     "type": "sunburst",
-    "labels": lab,
-    "parents": par,
-    "values": val,
+    "labels": filtered_data.map(x => x.label),
+    "parents": filtered_data.map(x => x.parent),
+    "values": filtered_data.map(x => x.num_plays),
     "leaf": {"opacity": 0.4},
     "marker": {"line": {"width": 2}},
     "branchvalues": 'total',
@@ -37,7 +34,7 @@ function make_sunburst(filtered_data) {
   let layout = {
     "margin": {"l": 0, "r": 0, "b": 0},
     title: `Showings by Date`,
-    colorway: ["#7DBA91", "#277A8C", "#3F908E", "#1B6488", "#5AA590", "#244B7F"]
+    colorway: ["#7DBA91", "#277A8C", "#3F908E", "#1B6488", "#5AA590"]
   }
 
   Plotly.newPlot("sunburst_chart", traces, layout)
@@ -52,14 +49,13 @@ function make_bar(filtered_data) {
   //let bar_text = filtered_data.map(x => x.Movies);
   let bar_y1 = filtered_data.map(x => x.Plays);
 
-
   // Trace 1 for the movies popularity
   let trace1 = {
     x: bar_x,
     y: bar_y1,
     type: 'bar',
     marker: {
-      color: "turbo"
+      color: "#3F908E"
     },
     // text: bar_x,
     name: "Movies Frequency",
