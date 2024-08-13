@@ -16,6 +16,39 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        h1 {
+            color: black;
+            text-align: center;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Block Example</title>
+    <style>
+        .text-block {
+            width: 50%;
+            margin: 0 auto;
+            background-color: transparent;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 18px;
+            color: black;
+            text-align: center;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Images Side by Side</title>
+    <style>
+        .image-container {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+        }
+        .image-container img {
+            margin: 20px;/* Add some margin between images */
+        }
+    </style>
 </head>
 
 <body>
@@ -42,74 +75,46 @@
         </div>
     </nav>
 
-    <!-- add spacing -->
-    <br/>
-
     <!-- Dashboard -->
-    <div id="centeredText">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <h1>About Us</h1>
-                </div>
-            </div>
-         </div>
-         <br/>
-         <br/>
-        We are a dedicated team of four passionate individuals who have embarked on an
-        exciting journey to bring the story telling of outdoor movie screenings in Chicago's
-        parks. Our project began with a comprehensive dataset of movies shown in city
-        parks from 2014 to 2019. With this valuable information in hand, we set out to
-        transform it into something truly special.
-        <br>
-        <br>
-        Thank you for visiting our website. We hope you find our visualizations both helpful
-        and inspiring as you plan your next movie night in the park!
-        <br>
-        <br>
-        Warm regards,
-        <br>
-        <br>
-        <br>
-        <br>
-        <div class ="row">
-            <div class="col-md-3">
-                <a href = "www.linkedin.com/in/fatima-lender">
-                    <img src="static/img/Fatima.jpg" class="rounded-circle" alt="Team Member 1" width="150" height="150">
-                    <h4>Fatima Rodriguez</h4>
-                </a>
-            </div>
-            <div class="col-md-3">
-                <a href = "https://www.linkedin.com/in/hen-wht/">
-                    <img src="https://media.licdn.com/dms/image/C4D03AQHEwyFD7GnZLw/profile-displayphoto-shrink_200_200/0/1656457977997?e=1729123200&v=beta&t=PEMzGrtJUEyHduX89AfToi2-9ttPNq6iu8cDxKSBTQ8" class="rounded-circle" alt="Team Member 2" width="150" height="150">
-                    <h4>Henry White</h4>
-                </a>
-            </div>
-            <div class="col-md-3">
-                <a href = "https://www.linkedin.com/in/samantha-schutz-aa674b164">
-                    <img src="static/img/Samantha.jpg" class="rounded-circle" alt="Team Member 3" width="150" height="150">
-                    <h4>Samantha Schutz</h4>
-                </a>
-            </div>
-            <div class="col-md-3">
-                <a href="http://www.linkedin.com/in/williamgrayrenton">
-                    <img src="https://media.licdn.com/dms/image/v2/D4E03AQFgnpPMlG5ulg/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1667095624958?e=1729123200&v=beta&t=ZwVg0MAi595eOmqJAgnwJfvmYjs6p2d1O8wh89oFu7Y" class="rounded-circle" alt="Team Member 4" width="150" height="150">
-                    <h4>William Gray Renton</h4>
-                </a>
-            </div>
+    <br>
+    <div class="row">
+        <h1 class="center">About Us</h1>
+    </div>
+    <div class="text-block">
+         <p>We are a dedicated team of four passionate individuals who have embarked on an
+            exciting journey to bring the story telling of outdoor movie screenings in Chicago's
+            parks. Our project began with a comprehensive dataset of movies shown in city
+            parks from 2014 to 2019. With this valuable information in hand, we set out to
+            transform it into something truly special.
+            <br>
+            <br>
+            Thank you for visiting our website. We hope you find our visualizations both helpful
+            and inspiring as you plan your next movie night in the park!
+            <br>
+            <br>
+            Warm regards,
+            <br>
+            <br>
+            </p>
         </div>
-     </div>
-    <script>
-        // Get the element by id
-        const centeredText = document.getElementById('centeredText');
-        // Set styles for centering text
-        centeredText.style.position = 'absolute';
-        centeredText.style.top = '70%';
-        centeredText.style.left = '50%';
-        centeredText.style.transform = 'translate(-50%, -50%)';
-        centeredText.style.margin = '0 auto';
-        centeredText.style.textAlign = 'center';
-    </script>
+        <div class ="image-container">
+        <a href = "www.linkedin.com/in/fatima-lender">
+            <img src="static/img/Fatima.jpg" class="rounded-circle" alt="Fatima Rodriguez's Portrait" width="200" height="200">
+            <h5>Fatima Rodriguez</h5>
+        </a>
+        <a href = "https://www.linkedin.com/in/hen-wht/">
+            <img src="https://media.licdn.com/dms/image/C4D03AQHEwyFD7GnZLw/profile-displayphoto-shrink_200_200/0/1656457977997?e=1729123200&v=beta&t=PEMzGrtJUEyHduX89AfToi2-9ttPNq6iu8cDxKSBTQ8" class="rounded-circle" alt="Henry White's Portrait" width="200" height="200">
+            <h5>Henry White</h5>
+        </a>
+            <a href = "https://www.linkedin.com/in/samantha-schutz-aa674b164">
+                    <img src="static/img/Samantha.jpg" class="rounded-circle" alt="Samantha Schutz's Portrait" width="200" height="200">
+                    <h5>Samantha Schutz</h5>
+                </a>
+        <a href="http://www.linkedin.com/in/williamgrayrenton">
+                    <img src="https://media.licdn.com/dms/image/v2/D4E03AQFgnpPMlG5ulg/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1667095624958?e=1729123200&v=beta&t=ZwVg0MAi595eOmqJAgnwJfvmYjs6p2d1O8wh89oFu7Y" class="rounded-circle" alt="William Gray Renton's Portrait" width="200" height="200">
+                    <h5>William Gray Renton</h5>
+        </a>
+</div>
 </body>
 <body>
 </body>
