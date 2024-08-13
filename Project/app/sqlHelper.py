@@ -21,30 +21,34 @@ class SQLHelper():
     #################################################
 
     # USING RAW SQL
-    def get_bar(self, user_selection="Most Frequent"):
+    def get_bar(self, user_selection="All"):
 
         #title popularity.
         #user selection, where clause
-        if user_selection == "Most Frequent":
-            filter_clause = "COUNT(title) >= 20"
-        elif user_selection == "Frequent":
-            filter_clause = "COUNT(title) >= 15 and COUNT(title) < 20"
-        elif user_selection == "Less Frequent":
-            filter_clause = "COUNT(title) >= 10 and COUNT(title) <15"
+        if user_selection == "All":
+            filter_clause = "datamonth=datamonth"
+        elif user_selection == "June":
+            filter_clause = "datamonth=6"
+        elif user_selection == "July":
+            filter_clause = "datamonth=7"
+        elif user_selection == "August":
+            filter_clause = "datamonth=8"
         else:
-            user_selection == "Rare"
-            filter_clause = "COUNT(title) >= 2 and COUNT(title) <10"
+            user_selection == "September"
+            filter_clause = "datamonth=9"
 
         # build the query
         query = f"""
             SELECT
-                Count(title) AS "Plays", title AS "Movie"
+                Count(title) AS "Plays", title AS "Movie", datamonth AS "Month"
             FROM
                 showings
-            GROUP BY
-                Movie
-            HAVING
+            WHERE
                 {filter_clause}
+            GROUP BY
+                title
+            HAVING
+                Plays > 1
             ORDER BY
                 Plays DESC;
                     """
@@ -54,16 +58,30 @@ class SQLHelper():
         return(data)
     
 
-    def get_sunburst(self):
+    def get_sunburst(self, user_selection="All"):
+
+        if user_selection == "All":
+            filter_clause = "datamonth=datamonth"
+        elif user_selection == "June":
+            filter_clause = "datamonth=6"
+        elif user_selection == "July":
+            filter_clause = "datamonth=7"
+        elif user_selection == "August":
+            filter_clause = "datamonth=8"
+        else:
+            user_selection == "September"
+            filter_clause = "datamonth=9"
 
         # build the query
         query = f"""
             SELECT
                 datayear as label,
                 "" as parent,
-                count(*) num_plays
+                count(title) num_plays
             FROM
                 showings
+            WHERE
+                {filter_clause}
             GROUP BY
                 datayear
 
@@ -72,9 +90,11 @@ class SQLHelper():
             SELECT
                 day as label,
                 datayear as parent,
-                count(*) num_plays
+                count(title) num_plays
             FROM
                 showings
+            WHERE
+                {filter_clause}
             GROUP BY
                 day,
                 datayear;
